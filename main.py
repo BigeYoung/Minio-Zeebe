@@ -1,27 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function
 import paho.mqtt.client as mqtt
 
-# The callback for when the client receives a CONNACK response from the server.
+# This is the Subscriber
+
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code", rc)
+  print("Connected with result code "+str(rc))
+  # qos level is set to 1
+  client.subscribe("minio", 1)
 
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    client.subscribe("/minio")
-
-# The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     print(msg.payload)
 
-client = mqtt.Client()
+# client_id is a randomly generated unique ID for the mqtt broker to identify the connection.
+client = mqtt.Client(client_id="myclientid",clean_session=False)
+
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("localhost:1883", 1883, 60)
-
-# Blocking call that processes network traffic, dispatches callbacks and
-# handles reconnecting.
-# Other loop*() functions are available that give a threaded interface and a
-# manual interface.
+client.connect("127.0.0.1",1883,60)
 client.loop_forever()
