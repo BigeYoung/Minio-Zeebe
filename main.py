@@ -10,11 +10,14 @@ import os
 ZEEBE_GATEWAY = os.environ['ZEEBE_GATEWAY']
 MQTT_SERVER = os.environ['MQTT_SERVER']
 
+print(ZEEBE_GATEWAY)
+print(MQTT_SERVER)
+
 # This is the Subscriber
 
 def zeebe_create(aml_path):
     print(aml_path)
-    with grpc.insecure_channel("ZEEBE_GATEWAY") as channel:
+    with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
         # start a workflow instance
         variable = {"aml": aml_path}
@@ -29,7 +32,7 @@ def zeebe_create(aml_path):
 
 def zeebe_msg(txt_path):
     print(txt_path)
-    with grpc.insecure_channel("ZEEBE_GATEWAY") as channel:
+    with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
         variables = {"txt_path": txt_path}
         publishMessageResponse = stub.PublishMessage(
@@ -68,5 +71,5 @@ client = mqtt.Client(client_id="myclientid",clean_session=False)
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("MQTT_SERVER")
+client.connect(MQTT_SERVER)
 client.loop_forever()

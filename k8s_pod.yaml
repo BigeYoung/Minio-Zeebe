@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-zeebe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio-zeebe
+  template:
+    metadata:
+      labels:
+        app: minio-zeebe
+    spec:
+      containers:
+      - name: minio-zeebe
+        image: registry.cn-hangzhou.aliyuncs.com/scut-cpps/minio-zeebe:release
+        imagePullPolicy: Always
+        command: [ "python3", "main.py" ]
+        env:
+          - name: ZEEBE_GATEWAY
+            value: "zeebe-zeebe-gateway:26500"
+          - name: MQTT_SERVER
+            value: "mqtt-mosquitto"
