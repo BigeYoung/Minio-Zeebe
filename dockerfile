@@ -1,4 +1,4 @@
-FROM python:3.6.8
+FROM python
 RUN apt-get update && apt-get install mosquitto -y
 RUN pip3 install paho-mqtt zeebe-grpc
 ENV ZEEBE_GATEWAY zeebe-zeebe-gateway:26500
