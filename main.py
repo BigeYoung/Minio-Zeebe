@@ -37,20 +37,22 @@ def zeebe_msg(txt_path):
     with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
         variables = {type_str.lower()+"_path": txt_path}
-        publishMessageResponse = stub.PublishMessage(
-            publishMessageRequest=gateway_pb2.PublishMessageRequest(
-                # the name of the message
-                name=type_str.lower()+"-uploaded",
-                # how long the message should be buffered on the broker, in milliseconds
-                timeToLive=10000,
-                # correlationKey = type_str.lower()+"_path",
-                # the unique ID of the message; can be omitted. only useful to ensure only one message
-                # with the given ID will ever be published (during its lifetime)
-                # the message variables as a JSON document; to be valid, the root of the document must be an
-                # object, e.g. { "a": "foo" }. [ "foo" ] would not be valid.
-                variables=json.dumps(variables)
-            )
+        print(variables)
+        publishMessageRequest = gateway_pb2.PublishMessageRequest(
+            # the name of the message
+            name=type_str.lower()+"-uploaded",
+            # how long the message should be buffered on the broker, in milliseconds
+            timeToLive=1000,
+            correlationKey=txt_path.replace(type_str.lower(), "aml"),
+            # the unique ID of the message; can be omitted. only useful to ensure only one message
+            # with the given ID will ever be published (during its lifetime)
+            # the message variables as a JSON document; to be valid, the root of the document must be an
+            # object, e.g. { "a": "foo" }. [ "foo" ] would not be valid.
+            variables=json.dumps(variables)
         )
+        print(publishMessageRequest)
+        publishMessageResponse = stub.PublishMessage(publishMessageRequest)
+        print("Response")
         print(publishMessageResponse)
 
 
