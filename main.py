@@ -30,7 +30,7 @@ def zeebe_msg(file_path):
             name=type_str.lower()+"-uploaded",
             # how long the message should be buffered on the broker, in milliseconds
             timeToLive=1000,
-            correlationKey="aml/"+file_name+".aml"
+            correlationKey="aml/"+file_name+".aml",
             # the unique ID of the message; can be omitted. only useful to ensure only one message
             # with the given ID will ever be published (during its lifetime)
             # the message variables as a JSON document; to be valid, the root of the document must be an
