@@ -23,11 +23,11 @@ def zeebe_msg(file_path):
     print("文件名：", file_name)
     with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
-        variables = {directory: file_path}
-        print(variables)
+        var = {directory: file_path}
+        print(var)
         publishMessageRequest = gateway_pb2.PublishMessageRequest(
             # the name of the message
-            name=type_str.lower()+"-uploaded",
+            name=directory+"-uploaded",
             # how long the message should be buffered on the broker, in milliseconds
             timeToLive=1000,
             correlationKey="aml/"+file_name+".aml",
@@ -35,7 +35,7 @@ def zeebe_msg(file_path):
             # with the given ID will ever be published (during its lifetime)
             # the message variables as a JSON document; to be valid, the root of the document must be an
             # object, e.g. { "a": "foo" }. [ "foo" ] would not be valid.
-            variables=json.dumps(variables)
+            variables=json.dumps(var)
         )
         print(publishMessageRequest)
         publishMessageResponse = stub.PublishMessage(publishMessageRequest)
