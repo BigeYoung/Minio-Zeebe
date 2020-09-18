@@ -13,37 +13,24 @@ MQTT_SERVER = os.environ['MQTT_SERVER']
 print(ZEEBE_GATEWAY)
 print(MQTT_SERVER)
 
-# This is the Subscriber
-
-# def zeebe_create(aml_path):
-#     print(aml_path)
-#     with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
-#         stub = gateway_pb2_grpc.GatewayStub(channel)
-#         # start a workflow instance
-#         variable = {"aml": aml_path}
-#         createResponse = stub.CreateWorkflowInstance(
-#             gateway_pb2.CreateWorkflowInstanceRequest(
-#                 bpmnProcessId='aml2owl-process-id',
-#                 version=-1,
-#                 variables=json.dumps(variable)
-#             )
-#         )
-#         print(createResponse)
-
-
-def zeebe_msg(txt_path):
-    print(txt_path)
-    type_str = txt_path[:3]
+def zeebe_msg(file_path):
+    print("完整路径：", file_path)
+    directory = file_path.split("/", 1)
+    print("文件夹：", directory)
+    file_whole_name = file_path.split("/", 2)
+    print("文件全名：", file_whole_name)
+    file_name = file_whole_name.split(".", 1)
+    print("文件名：", file_name)
     with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
-        variables = {type_str.lower()+"_path": txt_path}
+        variables = {directory: file_path}
         print(variables)
         publishMessageRequest = gateway_pb2.PublishMessageRequest(
             # the name of the message
             name=type_str.lower()+"-uploaded",
             # how long the message should be buffered on the broker, in milliseconds
             timeToLive=1000,
-            correlationKey=txt_path.replace(type_str.lower(), "aml"),
+            correlationKey="aml/"+file_name+".aml"
             # the unique ID of the message; can be omitted. only useful to ensure only one message
             # with the given ID will ever be published (during its lifetime)
             # the message variables as a JSON document; to be valid, the root of the document must be an
