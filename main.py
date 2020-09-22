@@ -17,7 +17,7 @@ def zeebe_msg(file_path):
     print("完整路径：", file_path)
     directory = file_path.split("/", 1)[0]
     print("文件夹：", directory)
-    file_whole_name = file_path.split("/", 2)[0]
+    file_whole_name = directory.split("/", 1)[1]
     print("文件全名：", file_whole_name)
     file_name = file_whole_name.split(".", 1)[0]
     print("文件名：", file_name)
