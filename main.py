@@ -15,11 +15,11 @@ print(MQTT_SERVER)
 
 def zeebe_msg(file_path):
     print("完整路径：", file_path)
-    directory = file_path.split("/", 1)
+    directory = file_path.split("/", 1)[0]
     print("文件夹：", directory)
-    file_whole_name = file_path.split("/", 2)
+    file_whole_name = file_path.split("/", 2)[0]
     print("文件全名：", file_whole_name)
-    file_name = file_whole_name.split(".", 1)
+    file_name = file_whole_name.split(".", 1)[0]
     print("文件名：", file_name)
     with grpc.insecure_channel(ZEEBE_GATEWAY) as channel:
         stub = gateway_pb2_grpc.GatewayStub(channel)
